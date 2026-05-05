@@ -4,9 +4,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Generador de paletas</title>
+    
+    <!--<link rel="stylesheet" href=""-->
 </head>
 <body>
+    <!--HEADER: Titulo y descripcion-->
+    <header>
+        <h1>Generador de Paletas de Colores</h1>
+        <p>Crea paletas de colores aleatorias al instante</p>
+    </header>
+
+    <!--NAV--Enlaces internos--->
+   
+    <!--AREA DE CONTENIDO PRINCIPAL-->
+    <main>
+        <!-- controles: tamaño, formato y botón principal -->
+        <section class="controles">
+            <div class="grupo-tamanio">
+                <span>Tamaño</span>
+                <button data-size="6">6</button>
+                <button data-size="8">8</button>
+                <button data-size="9">9</button>
+            </div>
+        
+            <div class="grupo-formato">
+                <span>Formato</span>
+                <button data-formato="hex">HEX</button>
+                <button data-formato="hsl">HSL</button>
+                <button data-formato="rgba">RGBA</button>
+            </div>
+
+            <button id="btn-generar">Generar paleta</button>
+
+        </section>
+
+        <!--Aca el Js va a insertar las tarjetas de colores-->
+        <section id="paleta"></section>
+      
+    </main>
+
+
+    <!--PIE DE PAGINA-->
+
+    <footer>
+        <small>Generador de paletas - Proyecto M1</small>
+
+    </footer>
+
+    <script src="script.js"></script>
     
 </body>
 </html>
+
+
+
+
+
+  
+
+ 
