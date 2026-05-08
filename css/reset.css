@@ -1,0 +1,57 @@
+
+/* ==========================================
+Reset y Configuracion base
+============================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Permite que la pagina ocupe toda la pantalla y define la tipografia base */
+
+body {
+    min-height: 100vh;
+    font-size: Arial, sans-serif;
+    font-size: 16px;
+    background-color: #1a1a1a;
+}
+
+
+/* Quita los puntos de las listas (las usa en el footer) */
+ul {
+    list-style: none;
+}
+
+/* Quita el subrayado de los links y hereda el color del padre */
+
+a{
+    text-align: none;
+    color: inherit; 
+}
+
+/* Esto fuerza a los botones a no heredar la tipografia por defecto */
+
+button{
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    border:none;
+    background-color: none;
+}
+
+
+/* Clase utilitaria: sr-only
+Oculta el elemento pero lo deja accesible para lectores de pantalla 
+<h2> de .controles */
+
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
