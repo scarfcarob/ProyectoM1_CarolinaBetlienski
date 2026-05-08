@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de paletas</title>
     
-    <!--<link rel="stylesheet" href=""-->
+    <!--<link rel="stylesheet" href="css/style.css"-->
+
 </head>
 <body>
     <!--HEADER: Titulo y descripcion-->
@@ -14,13 +15,12 @@
         <h1>Generador de Paletas de Colores</h1>
         <p>Crea paletas de colores aleatorias al instante</p>
     </header>
-
-    <!--NAV--Enlaces internos--->
    
     <!--AREA DE CONTENIDO PRINCIPAL-->
     <main>
         <!-- controles: tamaño, formato y botón principal -->
         <section class="controles">
+            <h2 class="sr-only">Configuracion de Paleta</h2>
             <div class="grupo-tamanio">
                 <span>Tamaño</span>
                 <button data-size="6">6</button>
@@ -32,7 +32,6 @@
                 <span>Formato</span>
                 <button data-formato="hex">HEX</button>
                 <button data-formato="hsl">HSL</button>
-                <button data-formato="rgba">RGBA</button>
             </div>
 
             <button id="btn-generar">Generar paleta</button>
@@ -40,19 +39,31 @@
         </section>
 
         <!--Aca el Js va a insertar las tarjetas de colores-->
-        <section id="paleta"></section>
-      
+        <section id="paleta" role="Lista">
+
+        </section>
+
+        <section id="toast" role="status">
+
+        </section>
+ 
     </main>
 
 
     <!--PIE DE PAGINA-->
 
     <footer>
-        <small>Generador de paletas - Proyecto M1</small>
+        <p>&copy; 2026 - Generador de Paletas</p>
+        <div class="social - links">
+            <a href="" target="_blank">GitHub</a>
+
+            <a href="" target="_blank">LinkdIn</a>
+
+        </div>
 
     </footer>
 
-    <script src="script.js"></script>
+     <!--<script src="js/script.js"></script>-->
     
 </body>
 </html>
