@@ -71,3 +71,72 @@ footer {
     color: #999;
 }
 
+/* ============================================
+   4. COMPONENTES 
+   ============================================ */
+
+/* Barra de Controles Gris */
+.controles {
+    background-color: var(--color-controles-fondo);
+    color: var(--color-texto-oscuro);
+    padding: 1rem 2rem;
+    border-radius: var(--radio-grande);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between; /* Botón a la derecha */
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.grupo-tamanio, .grupo-formato {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.grupo-tamanio span, .grupo-formato span {
+    font-weight: 600;
+}
+
+/* Botones de Selección (6, 8, 9, HEX, HSL) */
+button[data-size], button[data-formato] {
+    padding: 0.4rem 1rem;
+    border: 1px solid #9ca3af;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+button.activo {
+    background-color: var(--color-texto-oscuro) !important;
+    color: var(--color-texto-claro) !important;
+    border-color: #000000 !important;
+}
+
+/* Botón Generar Paleta */
+#btn-generar {
+    background-color: var(--color-primario);
+    color: white;
+    border: none;
+    padding: 0.7rem 1.8rem;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#btn-generar:hover {
+    background-color: var(--color-primario-hover);
+}
+
+/* Grilla de Colores */
+#paleta {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.5rem;
+}
+
+
