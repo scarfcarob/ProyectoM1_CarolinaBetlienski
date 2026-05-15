@@ -140,3 +140,78 @@ button.activo {
 }
 
 
+/* Pertenecen al Js: Tarjetas de Color */
+.tarjeta-color {
+    background-color: var(--color-tarjeta-fondo);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.tarjeta-color:hover {
+    transform: translateY(-5px);
+}
+
+.muestra-color {
+    height: 110px;
+    width: 100%;
+    border-radius: 12px 12px 0 0; /* esquinas superiores */
+}
+
+.info-color {
+    padding: 0.8rem;
+    text-align: center;
+}
+
+.texto-hex {
+    color: var(--color-texto-oscuro);
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Notificación Toast */
+#toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+#toast.visible {
+    opacity: 1;
+}
+
+/* ============================================
+   5. HELPERS Y UTILIDADES
+   ============================================ */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.social-links a {
+    color: var(--color-texto-claro);
+    text-decoration: underline;
+    margin: 0 0.5rem;
+}
+
+button:focus-visible {
+    outline: 3px solid var(--color-primario);
+    outline-offset: 2px;
+}
