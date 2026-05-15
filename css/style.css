@@ -1,1 +1,56 @@
 
+
+/* ============================================
+   1. ROOT 
+   ============================================ */
+:root {
+    
+    --color-fondo: #12121e; 
+    /* Gris claro de la barra de controles */
+    --color-controles-fondo: #d1d5db; 
+    /* Azul del botón generar */
+    --color-primario: #2563eb;
+    --color-primario-hover: #1d4ed8;
+    
+    --color-texto-oscuro: #000000;
+    --color-texto-claro: #ffffff;
+    --color-tarjeta-fondo: #e5e7eb;
+    
+    --radio-grande: 15px; 
+    --radio-medio: 8px;
+    --fuente-principal:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ============================================
+   2. TIPOGRAFÍA Y RESET
+   ============================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--fuente-principal);
+    background-color: var(--color-fondo);
+    color: var(--color-texto-claro);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    padding: 3rem 1rem 1.5rem;
+}
+
+.titulo-principal{
+    font-family: 'Georgia'; 
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.titulo-secundario {
+    font-size: 1.1rem;
+    color: #cccccc;
+}
+
