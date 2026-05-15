@@ -54,3 +54,20 @@ header {
     color: #cccccc;
 }
 
+/* ============================================
+   3. LAYOUT
+   ============================================ */
+main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: #999;
+}
+
