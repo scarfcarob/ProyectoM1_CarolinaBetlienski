@@ -10,22 +10,25 @@ Herramienta web estática e interactiva que genera paletas de colores aleatorias
 
 ### ¿Cómo usar la app?
 
-Al abrir la aplicación, se genera automáticamente una paleta de 6 colores aleatorios en formato HEX. No necesitás hacer nada para empezar — la app ya está lista.
+Al abrir la aplicación, se genera automáticamente una paleta de 6 colores aleatorios en formato HEX. No necesitás hacer nada para empezar — la app ya está lista para usar.
 
 ### Controles disponibles
 
-#### 1. Seleccionar el tamaño de la paleta
+#### 1. Generar una nueva paleta
+Hacé clic en el botón azul **"Generar paleta"** para crear un conjunto completamente nuevo de colores aleatorios. Aparecerá una notificación verde confirmando la acción.
+
+#### 2. Seleccionar el tamaño de la paleta
 En la barra de controles, hacé clic en uno de los botones de tamaño:
 
 | Botón | Resultado |
 |-------|-----------|
-| `6`   | Genera 6 tarjetas de color |
-| `8`   | Genera 8 tarjetas de color |
-| `9`   | Genera 9 tarjetas de color |
+| `6` | Muestra 6 tarjetas de color |
+| `8` | Muestra 8 tarjetas de color |
+| `9` | Muestra 9 tarjetas de color |
 
-El botón activo se resalta en negro. Al cambiar el tamaño, la paleta se regenera automáticamente.
+El botón activo se resalta en negro. Cambiar el tamaño no genera colores nuevos — solo muestra más o menos colores de la paleta actual.
 
-#### 2. Seleccionar el formato de color
+#### 3. Seleccionar el formato de color
 Elegí cómo querés ver los códigos de color:
 
 | Botón | Formato | Ejemplo |
@@ -33,11 +36,20 @@ Elegí cómo querés ver los códigos de color:
 | `HEX` | Hexadecimal | `#3AF92C` |
 | `HSL` | Matiz, Saturación, Luminosidad | `hsl(210, 60%, 50%)` |
 
-#### 3. Generar una nueva paleta
-Hacé clic en el botón azul **"Generar paleta"** para crear un nuevo conjunto de colores aleatorios con la configuración actual.
+Cambiar el formato no genera colores nuevos — solo convierte la representación visual del mismo color.
 
 #### 4. Copiar un color
-Hacé clic sobre cualquier tarjeta de color para copiar su código al portapapeles. Aparecerá una notificación en la parte inferior de la pantalla confirmando la acción.
+Hacé clic sobre cualquier tarjeta de color para copiar su código al portapapeles. Aparecerá una notificación violeta confirmando el color copiado.
+
+### Notificaciones
+
+La app muestra tres tipos de notificaciones en pantalla:
+
+| Color | Ícono | Cuándo aparece |
+|-------|-------|----------------|
+| Verde | ✅ | Al generar una nueva paleta |
+| Azul | 📐 | Al cambiar el tamaño |
+| Violeta | 📋 | Al copiar un color |
 
 ---
 
@@ -60,46 +72,52 @@ ProyectoM1_CarolinaBetlienski/
 | Tecnología | Versión | Rol |
 |------------|---------|-----|
 | HTML5 | — | Estructura semántica |
-| CSS3 | — | Estilos y layout |
+| CSS3 | — | Estilos, layout y animaciones |
 | JavaScript ES6 | — | Lógica e interactividad |
 | Normalize.css | 8.0.1 | Reset de estilos entre navegadores |
 
 ### Decisiones de diseño
 
-**HTML semántico**
-Se utilizaron etiquetas semánticas (`<header>`, `<main>`, `<footer>`, `<section>`) para dar significado estructural al contenido. Se incluyó `role="status"` en el toast y `class="sr-only"` en el `<h2>` de controles para mejorar la accesibilidad con lectores de pantalla.
+**HTML semántico y accesibilidad**
+Se utilizaron etiquetas semánticas (`<header>`, `<main>`, `<footer>`, `<section>`) y atributos de accesibilidad como `role="status"` en el toast y `class="sr-only"` en el `<h2>` de controles, para compatibilidad con lectores de pantalla.
 
 **CSS con variables (Custom Properties)**
-Los colores, radios de borde y fuentes se definen en `:root` como variables CSS, lo que centraliza el sistema de diseño y facilita futuros cambios de tema.
+Los colores, radios de borde y fuentes se definen en `:root` como variables CSS, centralizando el sistema de diseño y facilitando futuros cambios de tema.
 
-**Layout con Flexbox y CSS Grid**
-- La barra de controles usa `display: flex` con `flex-wrap: wrap` para adaptarse a distintos anchos de pantalla.
-- La grilla de tarjetas usa `display: grid` con `repeat(auto-fill, minmax(150px, 1fr))` para ser responsive sin media queries.
+**Layout responsivo sin media queries**
+- Barra de controles: `display: flex` con `flex-wrap: wrap` y `justify-content: space-between`
+- Grilla de tarjetas: `display: grid` con `repeat(auto-fit, minmax(180px, 1fr))` — se adapta automáticamente a cualquier ancho de pantalla
+
+**Sistema de color basado en HSL**
+Todos los colores se generan internamente en formato HSL con rangos controlados:
+- Saturación: 30–90% (evita colores apagados)
+- Luminosidad: 30–70% (evita negro y blanco puros)
+
+Luego se convierten a HEX mediante un algoritmo matemático (`hslAHex()`), lo que garantiza colores siempre visualmente útiles independientemente del formato mostrado.
+
+**Separación entre datos y presentación**
+La paleta se genera una sola vez (`generarNuevaPaleta()`) y se guarda en el array `paletaActual`. Los cambios de tamaño y formato solo llaman a `renderizarPaleta()`, que reutiliza los datos existentes sin regenerar colores — esto evita que la paleta cambie al solo cambiar el formato o el tamaño.
 
 **JavaScript: separación de responsabilidades**
-La lógica está dividida en funciones con una única responsabilidad cada una:
 
 | Función | Responsabilidad |
 |---------|----------------|
-| `generarHexAleatorio()` | Genera un color HEX aleatorio |
-| `generarHSLAleatorio()` | Genera valores H, S, L aleatorios |
-| `hslAString()` | Convierte objeto HSL a string CSS |
-| `generarColor()` | Coordina la generación según el formato activo |
-| `crearTarjeta()` | Construye un elemento DOM para cada color |
-| `generarPaleta()` | Limpia y rellena el contenedor con nuevas tarjetas |
-| `mostrarToast()` | Muestra y oculta la notificación de copiado |
+| `generarHSLAleatorio()` | Genera valores H, S, L aleatorios dentro de rangos controlados |
+| `hslAHex()` | Convierte valores HSL a código HEX mediante algoritmo matemático |
+| `formatearColor()` | Devuelve el color en el formato activo (HEX u HSL) |
+| `crearTarjeta()` | Construye el elemento DOM completo de cada tarjeta |
+| `renderizarPaleta()` | Lee `paletaActual` y dibuja las tarjetas en el DOM |
+| `generarNuevaPaleta()` | Genera 9 colores nuevos, los guarda y llama a `renderizarPaleta()` |
+| `mostrarToast()` | Muestra notificaciones tipadas con animación y auto-ocultado |
 
-**Estado de la app**
-Dos variables globales (`cantidadColores` y `formatoActual`) actúan como estado de la aplicación. Se actualizan al hacer clic en los botones y son consultadas por `generarPaleta()` en cada ejecución.
-
-**Generación de colores HSL**
-Se restringen los rangos de saturación (30–90%) y luminosidad (30–70%) para evitar colores demasiado apagados o extremos (blanco/negro puro), garantizando resultados visualmente útiles.
+**Toast con tipos**
+El sistema de notificaciones acepta tres tipos (`exito`, `info`, `copia`) que aplican estilos CSS diferentes mediante clases dinámicas. Se fuerza un reflow con `void toast.offsetWidth` para reiniciar la animación si el toast ya estaba visible.
 
 ---
 
-## 💻 Ejecutar el proyecto en local
+## 💻 Ejecutar en local
 
-No requiere instalación de dependencias ni servidor. Solo necesitás un navegador web moderno.
+No requiere instalación de dependencias ni servidor.
 
 ### Opción A — Clonar con Git
 
@@ -110,15 +128,10 @@ git clone https://github.com/scarfcarob/ProyectoM1_CarolinaBetlienski.git
 # 2. Entrar a la carpeta
 cd ProyectoM1_CarolinaBetlienski
 
-# 3. Abrir el archivo en el navegador
-# En Mac:
-open index.html
-
-# En Windows:
-start index.html
-
-# En Linux:
-xdg-open index.html
+# 3. Abrir en el navegador
+# Mac:     open index.html
+# Windows: start index.html
+# Linux:   xdg-open index.html
 ```
 
 ### Opción B — Descargar el ZIP
@@ -126,42 +139,32 @@ xdg-open index.html
 1. Ir a `https://github.com/scarfcarob/ProyectoM1_CarolinaBetlienski`
 2. Hacer clic en el botón verde **"Code"**
 3. Seleccionar **"Download ZIP"**
-4. Descomprimir el archivo descargado
-5. Abrir la carpeta y hacer doble clic en `index.html`
+4. Descomprimir y abrir `index.html` en el navegador
 
-> **Nota:** Para que `navigator.clipboard` funcione correctamente al copiar colores, algunos navegadores requieren que el archivo se sirva desde un servidor local. Podés usar la extensión **Live Server** de VS Code o ejecutar `npx serve .` en la carpeta del proyecto.
+> **Recomendado:** Abrí el proyecto con la extensión **Live Server** de VS Code. Esto asegura que `navigator.clipboard` (la función de copiar) funcione correctamente, ya que algunos navegadores la bloquean cuando el archivo se abre directamente desde el disco.
 
 ---
 
 ## 🚀 Desplegar en GitHub Pages
 
-GitHub Pages permite publicar sitios estáticos directamente desde un repositorio de GitHub, de forma gratuita.
+GitHub Pages publica sitios estáticos de forma gratuita directamente desde el repositorio.
 
 ### Pasos
 
-**1. Asegurate de que el repositorio sea público**
-Entrá a `Settings` del repositorio → en la sección `General` verificá que sea **Public**.
+1. En tu repositorio, ir a la pestaña **Settings**
+2. En el menú lateral, hacer clic en **Pages**
+3. En **Source**, seleccionar **Deploy from a branch**
+4. En **Branch**, elegir `main` y carpeta `/ (root)`
+5. Hacer clic en **Save**
+6. Esperar entre 1 y 3 minutos
 
-**2. Activar GitHub Pages**
-1. En el repositorio, hacé clic en la pestaña **Settings**
-2. En el menú lateral izquierdo, buscá la sección **Pages**
-3. En **"Source"**, seleccioná **Deploy from a branch**
-4. En **"Branch"**, elegí `main` y la carpeta `/ (root)`
-5. Hacé clic en **Save**
-
-**3. Esperar el deploy**
-GitHub tarda entre 1 y 3 minutos en publicar el sitio. Podés ver el estado en la pestaña **Actions** del repositorio.
-
-**4. Acceder al sitio publicado**
-Una vez publicado, la URL del sitio será:
+El sitio quedará publicado en:
 
 ```
 https://scarfcarob.github.io/ProyectoM1_CarolinaBetlienski/
 ```
 
-### Actualizar el sitio desplegado
-
-Cada vez que hagas un `push` a la rama `main`, GitHub Pages redesplegará el sitio automáticamente.
+### Actualizar el sitio después de cada cambio
 
 ```bash
 git add .
@@ -169,10 +172,11 @@ git commit -m "descripción del cambio"
 git push origin main
 ```
 
+GitHub Pages redespliega automáticamente con cada `push` a `main`.
+
 ---
 
 ## 👩‍💻 Autora
 
 **Carolina Betlienski S**
-Proyecto — Módulo 1
-© 2026
+Proyecto M1 — © 2026
