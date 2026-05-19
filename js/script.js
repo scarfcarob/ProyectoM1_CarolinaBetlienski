@@ -1,32 +1,21 @@
 
 
-// ============================================
-// Variables que guardan la configuracion actual 
-// ============================================
+// ================================================
+// Variables que guardan la configuración actual
+// ================================================
 
-let cantidadColores = 6;       // valores por defecto
+let cantidadColores = 6;              // valores por defecto
 let formatoActual = "hex";
 
 
+
+let paletaActual = [];
+
+
 // ============================================
-// PARTE 1: GENERADORES DE COLOR
+// PARTE 1: GENERADORES Y CONVERSORES DE COLOR
 // ============================================
 
-
-// Genera una color en formato Hexadecimal aleatorio
-function generarHexAleatorio() {
-    const caracteres = '0123456789ABCDEF';
-    let hex = "#";
-    for (let i = 0; i < 6; i++) {
-        hex += caracteres[Math.floor(Math.random() * 16)];
-    }
-    return hex;
-}
-
-
-
-
-// Genera un color en formato HSL aleatorio
 function generarHSLAleatorio() {
     const h = Math.floor(Math.random() * 360);
     const s = Math.floor(Math.random() * 60) + 30;
@@ -35,23 +24,23 @@ function generarHSLAleatorio() {
 }
 
 
-
-// Convierte un objeto HSL a un string CSS que se usa como color
-function hslAString(hsl) {
-    return `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+function hslAHex(h, s, l) {
+    s /= 100;
+    l /= 100;
+    const k = n => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    const toHex = x => Math.round(x * 255).toString(16).padStart(2, '0').toUpperCase();
+    return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
 }
 
 
-
-// Genera un color en el formato actual (Hex o HSL)
-// Devuelve un objeto con la propiedad 'css' para usar en estilos y 'texto' para mostrar/copiado
-
-function generarColor() {
+function formatearColor(hsl) {
     if (formatoActual === "hsl") {
-        const hsl = generarHSLAleatorio();
-        return { css: hslAString(hsl), texto: hslAString(hsl) };
+        const texto = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+        return { css: texto, texto: texto };
     } else {
-        const hex = generarHexAleatorio();
+        const hex = hslAHex(hsl.h, hsl.s, hsl.l);
         return { css: hex, texto: hex };
     }
 }
@@ -61,67 +50,84 @@ function generarColor() {
 // PARTE 2: CREAR UNA TARJETA DE COLOR
 // ============================================
 
-function crearTarjeta(color) {
-    
-    // contenedor principal de la tarjeta
+function crearTarjeta(hsl) {
+    const color = formatearColor(hsl);
+
     const tarjeta = document.createElement("div");
     tarjeta.classList.add("tarjeta-color");
     tarjeta.setAttribute("role", "listitem");
 
-    // bloque visual del color
     const swatch = document.createElement("div");
     swatch.classList.add("muestra-color");
-    swatch.style.backgroundColor = color.css;
+    
+    swatch.style.backgroundColor = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
 
-    // contenedor de la info (texto con el codigo del color)
     const infoContenedor = document.createElement("div");
     infoContenedor.classList.add("info-color");
 
-    
     const textoColor = document.createElement("p");
     textoColor.classList.add("texto-hex");
     textoColor.textContent = color.texto;
 
-    
-    // armar la tarjeta juntando el bloque de color y la info
     infoContenedor.appendChild(textoColor);
     tarjeta.appendChild(swatch);
     tarjeta.appendChild(infoContenedor);
 
-    // al hacer click en la tarjeta, copiar el codigo del color al portapapeles
     tarjeta.addEventListener("click", function () {
         navigator.clipboard.writeText(color.texto);
-        mostrarToast("Copiado: " + color.texto);
+        mostrarToast("📋 Copiado: " + color.texto, "copia");
     });
 
     return tarjeta;
 }
 
 
-// ============================================
-// PARTE 3: GENERAR LA PALETA COMPLETA
-// ============================================
+// ================================================
+// PARTE 3: RENDERIZAR LA PALETA
+// ================================================
 
-function generarPaleta() {
+function renderizarPaleta() {
     const contenedor = document.getElementById("paleta");
-    contenedor.innerHTML = "";     // limpia la paleta antes de generar los nuevos colores
+    contenedor.innerHTML = "";
 
-    for (let i = 0; i < cantidadColores; i++) {
-        const color = generarColor();
-        const tarjeta = crearTarjeta(color);
+    // muestra la cantidad de tarjetas según cantidadColores
+    const coloresAMostrar = paletaActual.slice(0, cantidadColores);
+
+    coloresAMostrar.forEach(function (hsl) {
+        const tarjeta = crearTarjeta(hsl);
         contenedor.appendChild(tarjeta);
-    }
+    });
 }
 
 
-// ============================================
-// PARTE 4: TOAST
-// ============================================
+// ================================================
+// PARTE 4: GENERAR COLORES NUEVOS
+// =================================================
 
-function mostrarToast(mensaje) {
+
+function generarNuevaPaleta() {
+    paletaActual = [];
+    for (let i = 0; i < 9; i++) {
+        paletaActual.push(generarHSLAleatorio());
+    }
+    renderizarPaleta();
+}
+
+
+// ===============================================
+// PARTE 5: TOAST CON TIPOS
+// ===============================================
+
+function mostrarToast(mensaje, tipo = "info") {
     const toast = document.getElementById("toast");
+
+    toast.classList.remove("toast-exito", "toast-info", "toast-copia", "visible");
+
+    // Fuerza reflow para reiniciar la animación si el toast ya estaba visible
+    void toast.offsetWidth;
+
     toast.textContent = mensaje;
-    toast.classList.add("visible");
+    toast.classList.add("toast-" + tipo, "visible");
 
     setTimeout(function () {
         toast.classList.remove("visible");
@@ -129,35 +135,42 @@ function mostrarToast(mensaje) {
 }
 
 
-// ============================================
-// PARTE 5: EVENTOS
-// ============================================
+// =================================================
+// PARTE 6: EVENTOS
+// =================================================
 
 
-// Boton para generar una nueva paleta 
-document.getElementById("btn-generar").addEventListener("click", generarPaleta);
+document.getElementById("btn-generar").addEventListener("click", function () {
+    generarNuevaPaleta();
+    mostrarToast("✅ ¡Paleta generada con éxito!", "exito");
+});
 
-// Botones para seleccionar la cantidad de colores (tamaño 6, 8, 9)
+
+// Botones de tamaño = solo cambia cuántas tarjetas se muestran
 const botonesSize = document.querySelectorAll(".grupo-tamanio button");
 
+// Al hacer click, actualiza cantidadColores, marca el botón como activo y renderiza la paleta
 botonesSize.forEach(function (boton) {
     boton.addEventListener("click", function () {
         cantidadColores = parseInt(boton.dataset.size);
         botonesSize.forEach(function (b) { b.classList.remove("activo"); });
         boton.classList.add("activo");
-        generarPaleta();
+        renderizarPaleta();
+        mostrarToast("📐 Mostrando " + cantidadColores + " colores", "info");
     });
 });
 
 
-// Botones para seleccionar el formato de color (Hex o HSL)
+// Botones de formato = solo convierte el texto visible
 const botonesFormato = document.querySelectorAll(".grupo-formato button");
+
 botonesFormato.forEach(function (boton) {
     boton.addEventListener("click", function () {
         formatoActual = boton.dataset.formato;
         botonesFormato.forEach(function (b) { b.classList.remove("activo"); });
         boton.classList.add("activo");
-        generarPaleta();
+        renderizarPaleta();
+        mostrarToast("🎨 Formato cambiado a " + boton.textContent, "info");
     });
 });
 
@@ -169,17 +182,4 @@ botonesFormato.forEach(function (boton) {
 document.querySelector(".grupo-tamanio button").classList.add("activo");
 document.querySelector(".grupo-formato button").classList.add("activo");
 
-generarPaleta();
-
-
-
-
-
-
-
-
-
-
-
-
-
+generarNuevaPaleta();
